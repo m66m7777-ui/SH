@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>البحث في قاعدة البيانات</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
+        input { padding: 10px; width: 80%; max-width: 400px; margin-bottom: 20px; }
+        .result-item { border: 1px solid #ccc; padding: 10px; margin: 5px auto; max-width: 400px; background: #f9f9f9; text-align: right; }
+    </style>
+</head>
+<body>
+
+    <h2>ابحث في بياناتك من خارج المنزل</h2>
+    <input type="text" id="searchBox" placeholder="اكتب الاسم أو الرقم للبحث..." onkeyup="searchData()">
+    <div id="results"></div>
+
+    <script>
+        let data = [];
+        // جلب البيانات التي تم رفعها من الأكسس
+        fetch('data.json')
+            .then(response => response.json())
+            .then(json => data = json);
+
+        function searchData() {
+            let query = document.getElementById('searchBox').value.toLowerCase();
+            let resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+            
+            if(query.trim() === '') return;
+
+            let filtered = data.filter(item => 
+                item.name.toLowerCase().includes(query) || item.phone.includes(query)
+            );
+
+            filtered.forEach(item => {
+                resultsDiv.innerHTML += `<div class="result-item">
+                    <strong>الاسم:</strong> ${item.name} <br>
+                    <strong>الهاتف:</strong> ${item.phone}
+                </div>`;
+            });
+        }
+    </script>
+</body>
+</html>
